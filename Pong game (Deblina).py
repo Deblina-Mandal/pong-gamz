@@ -177,8 +177,11 @@ bg_size = (1370, 690)
 background = pygame.transform.scale(bg_surface, bg_size)
 
 basic_font = pygame.font.Font('freesansbold.ttf', 32)
-plob_sound = pygame.mixer.Sound("snappy sound.mpeg")
-score_sound = pygame.mixer.Sound("sweet.ogg")
+welcome_sound = pygame.mixer.Sound("welcome.ogg")
+plob_sound = pygame.mixer.Sound("hit.ogg")
+score_sound = pygame.mixer.Sound("error.ogg")
+gameover_sound = pygame.mixer.Sound("gameover.ogg")
+enddisplay_sound = pygame.mixer.Sound("chime.ogg")
 
 # Game objects
 player = Player('paddle2.png', 1320, 350,(40, 150), 5)

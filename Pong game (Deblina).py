@@ -64,6 +64,7 @@ class Ball(Block):
                 self.rect.bottom = collision_paddle.top
                 self.speed_y *= -1
 
+
     def  ball_restart(self):
         self.active = False
         self.speed_x *= random.choice((-1, 1))
@@ -146,8 +147,8 @@ class GameManager:
             self.ball_group.sprite.ball_restart()
 
     def draw_score(self):
-        player_score = basic_font.render(str(self.player_score), True, green)
-        opponent_score = basic_font.render(str(self.opponent_score), True, green)
+        player_score = basic_font.render(str(self.player_score), True, blue)
+        opponent_score = basic_font.render(str(self.opponent_score), True, blue)
 
         player_score_rect = player_score.get_rect(midleft=(screen_width / 2 + 40, screen_height / 2))
         opponent_score_rect = opponent_score.get_rect(midright=(screen_width / 2 - 40, screen_height / 2))
@@ -168,8 +169,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Pong game')
 
 # Global Variables
-green = (0, 128, 0)
+green = (0, 255, 0)
 white = (255,255,255)
+blue = (135,206,250)
 
 # background
 bg_surface = pygame.image.load('pong background1.jfif').convert_alpha()
@@ -184,13 +186,13 @@ gameover_sound = pygame.mixer.Sound("gameover.ogg")
 enddisplay_sound = pygame.mixer.Sound("chime.ogg")
 
 # Game objects
-player = Player('paddle2.png', 1320, 350,(40, 150), 5)
-opponent = Opponent('paddle2.png', 40, 350,(40, 150), 7)
+player = Player('paddle2.png', 1320, 350,(30, 100), 6)
+opponent = Opponent('paddle2.png', 40, 350,(30, 100), 7)
 paddle_group = pygame.sprite.Group()
 paddle_group.add(player)
 paddle_group.add(opponent)
 
-ball = Ball('neon ball3.png', screen_width / 2, screen_height / 2 -15, 8, 8, (45,45),paddle_group)
+ball = Ball('neon ball3.png', screen_width / 2, screen_height / 2 -15, 8, 8, (35,35),paddle_group)
 ball_sprite = pygame.sprite.GroupSingle()
 ball_sprite.add(ball)
 

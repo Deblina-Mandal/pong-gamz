@@ -87,7 +87,7 @@ class Ball(Block):
             self.active = True
 
         time_counter = basic_font.render(str(countdown_number), True, white)
-        time_counter_rect = time_counter.get_rect(center=(screen_width / 2  -7, screen_height / 2 + 20))
+        time_counter_rect = time_counter.get_rect(center=(screen_width / 2  , screen_height / 2 + 30))
         screen.blit(time_counter, time_counter_rect)
 
 
@@ -156,11 +156,79 @@ class GameManager:
         screen.blit(player_score, player_score_rect)
         screen.blit(opponent_score, opponent_score_rect)
 
+class GameState():
+    def __init__(self):
+        self.state='instruction'
+
+    def instruction(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN :
+                self.state = 'main_game'
+        instruction1_text = instruction1_font.render('USE ARROW KEYS TO MOVE  THE PADDLE', True, yellow)
+        instruction1_rect = instruction1_text.get_rect(center=(700, 100))
+        instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME !', True, yellow)
+        instruction2_rect = instruction2_text.get_rect(center=(700, 500))
+
+        # screen.fill(bg_color1)
+        screen.blit(start_button, (0, 0))
+        #pygame.mixer.Sound.play(welcome_sound)
+
+        screen.blit(instruction1_text, instruction1_rect)
+        screen.blit(instruction2_text, instruction2_rect)
+
+        pygame.display.update()
+
+
+    def main_game(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    player.movement -= player.speed
+                if event.key == pygame.K_DOWN:
+                    player.movement += player.speed
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    player.movement += player.speed
+                if event.key == pygame.K_DOWN:
+                    player.movement -= player.speed
+
+        # Background
+        screen.blit(background, (0, 0))
+
+        # divider display
+        i = 40
+        while (i <= screen_height - 40):
+            pygame.draw.line(screen, green, (screen_width / 2, i - 10), (screen_width / 2, i), width=8)
+            i += 15
+
+        # Run the game
+        game_manager.run_game()
+
+        # Rendering
+        pygame.display.update()
+
+    def state_manager(self):
+        if self.state == 'instruction':
+            self.instruction()
+
+        if self.state == 'main_game':
+            self.main_game()
+
+
+
 
 # General setup
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 clock = pygame.time.Clock()
+
+game_state=GameState()
 
 # Main Window
 screen_width = 1370
@@ -172,13 +240,21 @@ pygame.display.set_caption('Pong game')
 green = (0, 255, 0)
 white = (255,255,255)
 blue = (135,206,250)
+yellow=(255,255,0)
 
 # background
 bg_surface = pygame.image.load('pong background1.jfif').convert_alpha()
 bg_size = (1370, 690)
 background = pygame.transform.scale(bg_surface, bg_size)
 
+start_button_surface=pygame.image.load('buttons 4.jfif').convert_alpha()
+startbutton_size = (1370, 690)
+start_button = pygame.transform.scale(start_button_surface, startbutton_size)
+
 basic_font = pygame.font.Font('freesansbold.ttf', 32)
+instruction1_font=pygame.font.SysFont('freesansbold.ttf',60,bold=True,italic=True)
+instruction2_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
+
 welcome_sound = pygame.mixer.Sound("welcome.ogg")
 plob_sound = pygame.mixer.Sound("hit.ogg")
 score_sound = pygame.mixer.Sound("error.ogg")
@@ -186,11 +262,11 @@ gameover_sound = pygame.mixer.Sound("gameover.ogg")
 enddisplay_sound = pygame.mixer.Sound("chime.ogg")
 
 # Game objects
-player = Player('paddle2.png', 1320, 350,(30, 100), 6)
-opponent = Opponent('paddle2.png', 40, 350,(30, 100), 7)
+player = Player('paddle2.png', 1320, 350,(30, 120), 6)
+opponent = Opponent('paddle2.png', 40, 350,(30, 120), 7)
 paddle_group = pygame.sprite.Group()
 paddle_group.add(player)
-paddle_group.add(opponent)
+paddle_group.add(opponent
 
 ball = Ball('neon ball3.png', screen_width / 2, screen_height / 2 -15, 8, 8, (35,35),paddle_group)
 ball_sprite = pygame.sprite.GroupSingle()
@@ -198,34 +274,7 @@ ball_sprite.add(ball)
 
 game_manager = GameManager(ball_sprite, paddle_group)
 
+
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player.movement -= player.speed
-            if event.key == pygame.K_DOWN:
-                player.movement += player.speed
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                player.movement += player.speed
-            if event.key == pygame.K_DOWN:
-                player.movement -= player.speed
-
-    # Background
-    screen.blit(background, (0, 0))
-
-    # divider display
-    i = 40
-    while (i <= screen_height - 40):
-        pygame.draw.line(screen, green, (screen_width / 2, i - 10), (screen_width / 2, i), width=8)
-        i += 15
-
-    # Run the game
-    game_manager.run_game()
-
-    # Rendering
-    pygame.display.update()
+    game_state.state_manager()
     clock.tick(60)

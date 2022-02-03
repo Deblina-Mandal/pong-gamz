@@ -46,7 +46,7 @@ class Ball(Block):
             self.restart_counter()
 
     def collisions(self):
-        if self.rect.top <= 30 or self.rect.bottom >= screen_height -30:
+        if self.rect.top <= 0 or self.rect.bottom >= screen_height:
             pygame.mixer.Sound.play(plob_sound)
             self.speed_y *= -1
 
@@ -166,7 +166,10 @@ class GameState():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN :
+                welcome_sound.stop()
                 self.state = 'main_game'
+            else:
+                welcome_sound.play()
         instruction1_text = instruction1_font.render('USE ARROW KEYS TO MOVE  THE PADDLE', True, yellow)
         instruction1_rect = instruction1_text.get_rect(center=(700, 100))
         instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME !', True, yellow)
@@ -174,7 +177,6 @@ class GameState():
 
         # screen.fill(bg_color1)
         screen.blit(start_button, (0, 0))
-        #pygame.mixer.Sound.play(welcome_sound)
 
         screen.blit(instruction1_text, instruction1_rect)
         screen.blit(instruction2_text, instruction2_rect)
@@ -257,7 +259,7 @@ instruction2_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=Tru
 
 welcome_sound = pygame.mixer.Sound("welcome.ogg")
 plob_sound = pygame.mixer.Sound("hit.ogg")
-score_sound = pygame.mixer.Sound("error.ogg")
+score_sound = pygame.mixer.Sound("collide.ogg")
 gameover_sound = pygame.mixer.Sound("gameover.ogg")
 enddisplay_sound = pygame.mixer.Sound("chime.ogg")
 
@@ -266,7 +268,7 @@ player = Player('paddle2.png', 1320, 350,(30, 120), 6)
 opponent = Opponent('paddle2.png', 40, 350,(30, 120), 7)
 paddle_group = pygame.sprite.Group()
 paddle_group.add(player)
-paddle_group.add(opponent
+paddle_group.add(opponent)
 
 ball = Ball('neon ball3.png', screen_width / 2, screen_height / 2 -15, 8, 8, (35,35),paddle_group)
 ball_sprite = pygame.sprite.GroupSingle()

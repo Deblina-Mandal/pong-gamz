@@ -259,7 +259,7 @@ instruction2_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=Tru
 
 welcome_sound = pygame.mixer.Sound("welcome.ogg")
 plob_sound = pygame.mixer.Sound("hit.ogg")
-score_sound = pygame.mixer.Sound("collide.ogg")
+score_sound = pygame.mixer.Sound("collide.wav")
 gameover_sound = pygame.mixer.Sound("gameover.ogg")
 enddisplay_sound = pygame.mixer.Sound("chime.ogg")
 

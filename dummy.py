@@ -247,6 +247,7 @@ class GameState():
         # Check the winner
         if game_manager.check_winner() == 1 or game_manager.check_winner() == 0:
             self.state = 'game_over'
+            self.stime=pygame.time.get_ticks()
 
         # Rendering
         pygame.display.update()
@@ -257,17 +258,20 @@ class GameState():
                 pygame.quit()
                 sys.exit()
 
-
+        stime2=pygame.time.get_ticks()
         if game_manager.check_winner() == 1:
             gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, yellow)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             win_sound.play()
-
+            if stime2-self.stime>=1000:
+                win_sound.stop()
 
         elif game_manager.check_winner() == 0:
             gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, yellow)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             lose_sound.play()
+            if stime2-self.stime>=1000:
+                lose_sound.stop()
 
 
 
@@ -350,9 +354,9 @@ plob_sound = pygame.mixer.Sound("Shrink ray.ogg")
 pygame.mixer.Sound.set_volume(plob_sound, 0.3)
 
 score_sound = pygame.mixer.Sound("collide.wav")
-win_sound = pygame.mixer.Sound("over.wav")
+win_sound = pygame.mixer.Sound("win")
 pygame.mixer.Sound.set_volume(win_sound, 0.1)
-lose_sound = pygame.mixer.Sound("over.wav")
+lose_sound = pygame.mixer.Sound("lose")
 pygame.mixer.Sound.set_volume(lose_sound, 0.1)
 
 # Game objects

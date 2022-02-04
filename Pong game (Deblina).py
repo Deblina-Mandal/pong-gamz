@@ -162,10 +162,10 @@ class GameManager:
         screen.blit(player2, player2_rect)
 
     def check_winner(self):
-        if self.opponent_score == 3 or self.player_score == 3:
-            if self.opponent_score == 3:
+        if self.opponent_score == 5 or self.player_score == 5:
+            if self.opponent_score == 5:
                 return 0
-            if self.player_score == 3:
+            if self.player_score == 5:
                 return 1
 
 class GameState():
@@ -204,7 +204,7 @@ class GameState():
         instruction1_rect = instruction1_text.get_rect(center=(700, 100))
         instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME!', True, yellow)
         instruction2_rect = instruction2_text.get_rect(center=(700, 500))
-        instruction3_text = instruction3_font.render('TARGET SCORE: 10', True, yellow)
+        instruction3_text = instruction3_font.render('TARGET SCORE: 5', True, yellow)
         instruction3_rect = instruction3_text.get_rect(center=(700, 550))
 
         # screen.fill(bg_color1)
@@ -263,14 +263,14 @@ class GameState():
             gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, yellow)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             win_sound.play()
-            if stime2-self.stime>=1000:
+            if stime2-self.stime>=1700:
                 win_sound.stop()
 
         elif game_manager.check_winner() == 0:
             gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, yellow)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             lose_sound.play()
-            if stime2-self.stime>=1000:
+            if stime2-self.stime>=1200:
                 lose_sound.stop()
 
 

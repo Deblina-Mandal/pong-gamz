@@ -147,8 +147,8 @@ class GameManager:
             self.ball_group.sprite.ball_restart()
 
     def draw_score(self):
-        player_score = basic_font.render(str(self.player_score), True, blue)
-        opponent_score = basic_font.render(str(self.opponent_score), True, blue)
+        player_score = basic_font.render(str(self.player_score), True, yellow)
+        opponent_score = basic_font.render(str(self.opponent_score), True, yellow)
 
         player_score_rect = player_score.get_rect(midleft=(screen_width / 2 + 40, screen_height / 2))
         opponent_score_rect = opponent_score.get_rect(midright=(screen_width / 2 - 40, screen_height / 2))
@@ -158,7 +158,26 @@ class GameManager:
 
 class GameState():
     def __init__(self):
-        self.state='instruction'
+        self.state='intro' 
+    def intro(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                 self.state = 'instruction'
+
+        intro1_text = basic_font.render('Click anywhere to continue ^_^', True, yellow)
+        intro1_rect = intro1_text.get_rect(center=(600, 600))
+
+        pygame.mixer.Sound.set_volume(welcome_sound,0.8)
+        pygame.mixer.Sound.play(welcome_sound)
+
+        screen.blit(introduction1, (0,0))
+        screen.blit(introduction2,(100,250))
+        screen.blit(intro1_text, intro1_rect)
+
+        pygame.display.update()
 
     def instruction(self):
         for event in pygame.event.get():
@@ -168,8 +187,7 @@ class GameState():
             if event.type == pygame.MOUSEBUTTONDOWN :
                 welcome_sound.stop()
                 self.state = 'main_game'
-            else:
-                welcome_sound.play()
+
         instruction1_text = instruction1_font.render('USE ARROW KEYS TO MOVE  THE PADDLE', True, yellow)
         instruction1_rect = instruction1_text.get_rect(center=(700, 100))
         instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME !', True, yellow)
@@ -216,6 +234,9 @@ class GameState():
         pygame.display.update()
 
     def state_manager(self):
+        if self.state == 'intro' :
+            self.intro()
+
         if self.state == 'instruction':
             self.instruction()
 
@@ -246,19 +267,30 @@ yellow=(255,255,0)
 
 # background
 bg_surface = pygame.image.load('pong background1.jfif').convert_alpha()
-bg_size = (1370, 690)
+bg_size = (1370, 700)
 background = pygame.transform.scale(bg_surface, bg_size)
 
 start_button_surface=pygame.image.load('buttons 4.jfif').convert_alpha()
 startbutton_size = (1370, 690)
 start_button = pygame.transform.scale(start_button_surface, startbutton_size)
 
-basic_font = pygame.font.Font('freesansbold.ttf', 32)
+intro1_surface=pygame.image.load('pong intro 8.png').convert_alpha()
+intro1_size = (1370, 700)
+introduction1 = pygame.transform.scale(intro1_surface, intro1_size)
+
+intro2_surface=pygame.image.load('pong intro9.png').convert_alpha()
+intro2_size = (1000, 800)
+introduction2 = pygame.transform.scale(intro2_surface, intro2_size)
+
+
+basic_font = pygame.font.Font('freesansbold.ttf', 40)
 instruction1_font=pygame.font.SysFont('freesansbold.ttf',60,bold=True,italic=True)
 instruction2_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
 
 welcome_sound = pygame.mixer.Sound("welcome.ogg")
-plob_sound = pygame.mixer.Sound("hit.ogg")
+plob_sound = pygame.mixer.Sound("Shrink ray.ogg")
+pygame.mixer.Sound.set_volume(plob_sound, 0.3)
+
 score_sound = pygame.mixer.Sound("collide.wav")
 gameover_sound = pygame.mixer.Sound("gameover.ogg")
 enddisplay_sound = pygame.mixer.Sound("chime.ogg")
@@ -270,7 +302,7 @@ paddle_group = pygame.sprite.Group()
 paddle_group.add(player)
 paddle_group.add(opponent)
 
-ball = Ball('neon ball3.png', screen_width / 2, screen_height / 2 -15, 8, 8, (35,35),paddle_group)
+ball = Ball('neon ball3.png', screen_width / 2, screen_height / 2 -15, 8, 8, (45,45),paddle_group)
 ball_sprite = pygame.sprite.GroupSingle()
 ball_sprite.add(ball)
 

@@ -136,7 +136,7 @@ class GameManager:
         self.paddle_group.update(self.ball_group)
         self.ball_group.update()
         self.ball_restart()
-        self.draw_score()
+        self.draw_board()
 
     def ball_restart(self):
         if self.ball_group.sprite.rect.right >= screen_width:
@@ -146,15 +146,28 @@ class GameManager:
             self.player_score += 1
             self.ball_group.sprite.ball_restart()
 
-    def draw_score(self):
-        player_score = basic_font.render(str(self.player_score), True, yellow)
-        opponent_score = basic_font.render(str(self.opponent_score), True, yellow)
+    def draw_board(self):
+        player_score = basic_font.render(str(self.player_score), True, blue)
+        opponent_score = basic_font.render(str(self.opponent_score), True, blue)
+        player1 = playerno_font.render('Player 1', True, yellow)
+        player2 = playerno_font.render('Player 2', True, yellow)
 
         player_score_rect = player_score.get_rect(midleft=(screen_width / 2 + 40, screen_height / 2))
         opponent_score_rect = opponent_score.get_rect(midright=(screen_width / 2 - 40, screen_height / 2))
+        player1_rect = player1.get_rect(topleft=(screen_width / 2 - 400, screen_height / 7))
+        player2_rect = player2.get_rect(topright=(screen_width / 2 + 400, screen_height / 7))
 
         screen.blit(player_score, player_score_rect)
         screen.blit(opponent_score, opponent_score_rect)
+        screen.blit(player1, player1_rect)
+        screen.blit(player2, player2_rect)
+
+    def check_winner(self):
+        if self.opponent_score == 3 or self.player_score == 3:
+            if self.opponent_score == 3:
+                return 0
+            if self.player_score == 3:
+                return 1
 
 class GameState():
     def __init__(self):
@@ -188,19 +201,21 @@ class GameState():
                 welcome_sound.stop()
                 self.state = 'main_game'
 
-        instruction1_text = instruction1_font.render('USE ARROW KEYS TO MOVE  THE PADDLE', True, yellow)
+        instruction1_text = instruction1_font.render('USE ARROW KEYS TO MOVE THE PADDLE', True, yellow)
         instruction1_rect = instruction1_text.get_rect(center=(700, 100))
-        instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME !', True, yellow)
+        instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME!', True, yellow)
         instruction2_rect = instruction2_text.get_rect(center=(700, 500))
+        instruction3_text = instruction3_font.render('TARGET SCORE: 10', True, yellow)
+        instruction3_rect = instruction3_text.get_rect(center=(700, 550))
 
         # screen.fill(bg_color1)
         screen.blit(start_button, (0, 0))
 
         screen.blit(instruction1_text, instruction1_rect)
         screen.blit(instruction2_text, instruction2_rect)
+        screen.blit(instruction3_text, instruction3_rect)
 
         pygame.display.update()
-
 
     def main_game(self):
         for event in pygame.event.get():
@@ -230,7 +245,33 @@ class GameState():
         # Run the game
         game_manager.run_game()
 
+        # Check the winner
+        if game_manager.check_winner() == 1 or game_manager.check_winner() == 0:
+            self.state = 'game_over'
+
         # Rendering
+        pygame.display.update()
+
+    def game_over(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        if game_manager.check_winner() == 1:
+            gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, yellow)
+            gameover_rect = gameover_text.get_rect(center=(700, 100))
+            win_sound.play()
+        elif game_manager.check_winner() == 0:
+            gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, yellow)
+            gameover_rect = gameover_text.get_rect(center=(700, 100))
+            lose_sound.play()
+
+        surface.fill(red)
+
+        screen.blit(gameover, (300, 150))
+        screen.blit(gameover_text, gameover_rect)
+
         pygame.display.update()
 
     def state_manager(self):
@@ -242,6 +283,9 @@ class GameState():
 
         if self.state == 'main_game':
             self.main_game()
+
+        if self.state == 'game_over':
+            self.game_over()
 
 
 
@@ -261,6 +305,7 @@ pygame.display.set_caption('Pong game')
 
 # Global Variables
 green = (0, 255, 0)
+red = (255, 0, 0)
 white = (255,255,255)
 blue = (135,206,250)
 yellow=(255,255,0)
@@ -282,18 +327,28 @@ intro2_surface=pygame.image.load('pong intro9.png').convert_alpha()
 intro2_size = (1000, 800)
 introduction2 = pygame.transform.scale(intro2_surface, intro2_size)
 
+over_surface=pygame.image.load('gameover.png').convert_alpha()
+over_size = (800, 400)
+gameover = pygame.transform.scale(over_surface, over_size)
+
+surface = pygame.display.set_mode((1370, 700))
 
 basic_font = pygame.font.Font('freesansbold.ttf', 40)
+playerno_font = pygame.font.Font('freesansbold.ttf', 25)
 instruction1_font=pygame.font.SysFont('freesansbold.ttf',60,bold=True,italic=True)
 instruction2_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
+instruction3_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
+gameover_font=pygame.font.SysFont('freesansbold.ttf',50,bold=True,italic=True)
 
 welcome_sound = pygame.mixer.Sound("welcome.ogg")
 plob_sound = pygame.mixer.Sound("Shrink ray.ogg")
 pygame.mixer.Sound.set_volume(plob_sound, 0.3)
 
 score_sound = pygame.mixer.Sound("collide.wav")
-gameover_sound = pygame.mixer.Sound("gameover.ogg")
-enddisplay_sound = pygame.mixer.Sound("chime.ogg")
+win_sound = pygame.mixer.Sound("win")
+pygame.mixer.Sound.set_volume(win_sound, 0.1)
+lose_sound = pygame.mixer.Sound("lose")
+pygame.mixer.Sound.set_volume(lose_sound, 0.1)
 
 # Game objects
 player = Player('paddle2.png', 1320, 350,(30, 120), 6)

@@ -87,6 +87,7 @@ class Ball(Block):
 
         time_counter = basic_font.render(str(countdown_number), True, white)
         time_counter_rect = time_counter.get_rect(center=(screen_width / 2  , screen_height / 2 + 30))
+        pygame.draw.circle(screen,white,(screen_width / 2  , screen_height / 2 + 30),30,5)
         screen.blit(time_counter, time_counter_rect)
 
 
@@ -200,12 +201,12 @@ class GameState():
                 welcome_sound.stop()
                 self.state = 'main_game'
 
-        instruction1_text = instruction1_font.render('USE ARROW KEYS TO MOVE THE PADDLE', True, yellow)
+        instruction1_text = instruction1_font.render('USE ARROW KEYS TO MOVE THE PADDLE', True, white)
         instruction1_rect = instruction1_text.get_rect(center=(700, 100))
-        instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME!', True, yellow)
-        instruction2_rect = instruction2_text.get_rect(center=(700, 500))
-        instruction3_text = instruction3_font.render('TARGET SCORE: 5', True, yellow)
-        instruction3_rect = instruction3_text.get_rect(center=(700, 550))
+        instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME!', True, white)
+        instruction2_rect = instruction2_text.get_rect(center=(700, 600))
+        instruction3_text = instruction3_font.render('TARGET SCORE: 5', True, white)
+        instruction3_rect = instruction3_text.get_rect(center=(700, 650))
 
         # screen.fill(bg_color1)
         screen.blit(start_button, (0, 0))
@@ -257,25 +258,28 @@ class GameState():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pygame.quit()
+                sys.exit()
 
         stime2=pygame.time.get_ticks()
         if game_manager.check_winner() == 1:
-            gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, yellow)
+            gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, white)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             win_sound.play()
-            if stime2-self.stime>=1000:
+            if stime2-self.stime>=1700:
                 win_sound.stop()
 
         elif game_manager.check_winner() == 0:
-            gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, yellow)
+            gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, white)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             lose_sound.play()
-            if stime2-self.stime>=1000:
+            if stime2-self.stime>=1700:
                 lose_sound.stop()
 
 
 
-        surface.fill(red)
+        surface.fill(purple)
 
 
         screen.blit(gameover, (300, 150))
@@ -318,13 +322,14 @@ red = (255, 0, 0)
 white = (255,255,255)
 blue = (135,206,250)
 yellow=(255,255,0)
+purple=(154,50,205)
 
 # background
 bg_surface = pygame.image.load('pong background1.jfif').convert_alpha()
 bg_size = (1370, 700)
 background = pygame.transform.scale(bg_surface, bg_size)
 
-start_button_surface=pygame.image.load('buttons 4.jfif').convert_alpha()
+start_button_surface=pygame.image.load('start1.jpeg').convert_alpha()
 startbutton_size = (1370, 690)
 start_button = pygame.transform.scale(start_button_surface, startbutton_size)
 
@@ -336,14 +341,14 @@ intro2_surface=pygame.image.load('pong intro9.png').convert_alpha()
 intro2_size = (1000, 800)
 introduction2 = pygame.transform.scale(intro2_surface, intro2_size)
 
-over_surface=pygame.image.load('gameover.png').convert_alpha()
+over_surface=pygame.image.load('game over1.jpeg').convert_alpha()
 over_size = (800, 400)
 gameover = pygame.transform.scale(over_surface, over_size)
 
 surface = pygame.display.set_mode((1370, 700))
 
-basic_font = pygame.font.Font('freesansbold.ttf', 40)
-playerno_font = pygame.font.Font('freesansbold.ttf', 25)
+basic_font = pygame.font.SysFont('freesansbold.ttf', 60,bold=True)
+playerno_font = pygame.font.SysFont('freesansbold.ttf', 40,bold=True)
 instruction1_font=pygame.font.SysFont('freesansbold.ttf',60,bold=True,italic=True)
 instruction2_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
 instruction3_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)

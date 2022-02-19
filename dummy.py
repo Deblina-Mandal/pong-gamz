@@ -274,6 +274,7 @@ class GameState():
                     pygame.quit()
                     sys.exit()
 
+        self.active=1
         stime2=pygame.time.get_ticks()
         if game_manager.check_winner() == 1 and self.active==1:
             gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, white)
@@ -282,7 +283,7 @@ class GameState():
             if stime2-self.stime>=1700:
                 win_sound.stop()
             self.active=0
-        elif game_manager.check_winner() == 0:
+        elif game_manager.check_winner() == 0 and self.active==1:
             gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, white)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             lose_sound.play()

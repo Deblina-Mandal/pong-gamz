@@ -253,24 +253,14 @@ class GameState():
         # Rendering
         pygame.display.update()
 
-    def game_restart(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                print("Hit Restart XD")
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print("Hit Restart")
-                self.state = 'main _game'
-
-
     def game_over(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.state = 'game_restart'
+                pygame.quit()
+                sys.exit()
 
         stime2=pygame.time.get_ticks()
         if game_manager.check_winner() == 1:
@@ -309,10 +299,6 @@ class GameState():
 
         if self.state == 'game_over':
             self.game_over()
-
-        if self.state == 'game_restart':
-            self.game_restart()
-
 
 
 

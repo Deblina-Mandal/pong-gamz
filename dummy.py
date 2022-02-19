@@ -119,20 +119,20 @@ class Opponent(Block):
         if self.rect.bottom >= screen_height:
             self.rect.bottom = screen_height
 
-class GameManager:
 
+class GameManager:
     def __init__(self, ball_group, paddle_group):
         self.player_score = 0
         self.opponent_score = 0
         self.ball_group = ball_group
         self.paddle_group = paddle_group
-        self.active=0
-
+        self.active = 0
 
     def run_game(self):
         # Drawing the game objects
         self.paddle_group.draw(screen)
         self.ball_group.draw(screen)
+
         # Updating the game objects
         self.paddle_group.update(self.ball_group)
         self.ball_group.update()
@@ -144,6 +144,7 @@ class GameManager:
             self.opponent_score=0
             self.player_score=0
             self.active=0
+
         if self.ball_group.sprite.rect.right >= screen_width:
             self.opponent_score += 1
             self.ball_group.sprite.ball_restart()
@@ -168,9 +169,8 @@ class GameManager:
         screen.blit(player2, player2_rect)
 
     def check_winner(self):
-
-      if self.opponent_score == 5 or self.player_score == 5:
-            self.active = 1
+        if self.opponent_score == 5 or self.player_score == 5:
+            self.active=1
             if self.opponent_score == 5:
                 return 0
             if self.player_score == 5:
@@ -178,9 +178,8 @@ class GameManager:
 
 class GameState():
     def __init__(self):
-        self.state= 'intro'
+        self.state='intro'
         self.active=0
-
     def intro(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -255,7 +254,7 @@ class GameState():
         game_manager.run_game()
 
         # Check the winner
-        if (game_manager.check_winner() == 1 or game_manager.check_winner() == 0) and self.active==0 :
+        if (game_manager.check_winner() == 1 or game_manager.check_winner() == 0) and self.active == 0:
             self.state = 'game_over'
             self.stime=pygame.time.get_ticks()
 
@@ -263,7 +262,6 @@ class GameState():
         pygame.display.update()
 
     def game_over(self):
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -274,8 +272,8 @@ class GameState():
                     self.state='main_game'
                 if event.key == pygame.K_n:
                     pygame.quit()
+                    sys.exit()
 
-        self.active=1
         stime2=pygame.time.get_ticks()
         if game_manager.check_winner() == 1 and self.active==1:
             gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, white)
@@ -283,9 +281,8 @@ class GameState():
             win_sound.play()
             if stime2-self.stime>=1700:
                 win_sound.stop()
-            self.active = 0
-
-        elif game_manager.check_winner() == 0 and self.active==1:
+            self.active=0
+        elif game_manager.check_winner() == 0:
             gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, white)
             gameover_rect = gameover_text.get_rect(center=(700, 100))
             lose_sound.play()
@@ -301,6 +298,7 @@ class GameState():
         screen.blit(gameover, (300, 150))
         screen.blit(gameover_text, gameover_rect)
         screen.blit(replay_text, replay_rect)
+
         pygame.display.update()
 
     def state_manager(self):
@@ -330,7 +328,7 @@ game_state=GameState()
 screen_width = 1370
 screen_height = 700
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('Ping pong game')
+pygame.display.set_caption('Pong game')
 
 # Global Variables
 green = (0, 255, 0)

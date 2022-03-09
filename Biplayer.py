@@ -198,9 +198,9 @@ class GameState():
                 self.state = 'main_game'
 
         instruction1_text = instruction1_font.render('PLAYER 1 SHOULD USE  \'A\' AND \'D\'  KEYS ', True, white)
-        instruction1_rect = instruction1_text.get_rect(center=(700, 100))
+        instruction1_rect = instruction1_text.get_rect(center=(700, 60))
         instruction4_text = instruction1_font.render(' PLAYER 2 SHOULD USE ARROW KEYS TO MOVE THE PADDLE', True, white)
-        instruction4_rect = instruction1_text.get_rect(center=(500, 150))
+        instruction4_rect = instruction1_text.get_rect(center=(550, 110))
 
         instruction2_text = instruction2_font.render('CLICK ON START BUTTON TO START THE GAME!', True, white)
         instruction2_rect = instruction2_text.get_rect(center=(700, 600))
@@ -209,7 +209,7 @@ class GameState():
 
         # screen.fill(bg_color1)
         screen.blit(start_button, (0, 0))
-
+        pygame.draw.rect(screen, white, pygame.Rect(200, 20, 1000, 120), 3)
         screen.blit(instruction1_text, instruction1_rect)
         screen.blit(instruction4_text, instruction4_rect)
         screen.blit(instruction2_text, instruction2_rect)
@@ -280,29 +280,29 @@ class GameState():
         self.active=1
         stime2=pygame.time.get_ticks()
         if game_manager.check_winner() == 1 and self.active==1:
-            gameover_text = gameover_font.render('CONGRATULATIONS! YOU WIN THE GAME!', True, white)
-            gameover_rect = gameover_text.get_rect(center=(700, 100))
+            gameover_text = gameover_font.render('PLAYER 2 WINS!', True, white)
+            gameover_rect = gameover_text.get_rect(center=(700, 95))
             win_sound.play()
             if stime2-self.stime>=1700:
                 win_sound.stop()
             self.active=0
         elif game_manager.check_winner() == 0 and self.active==1:
-            gameover_text = gameover_font.render('YOU LOSE. BETTER LUCK NEXT TIME!', True, white)
-            gameover_rect = gameover_text.get_rect(center=(700, 100))
-            lose_sound.play()
+            gameover_text = gameover_font.render('PLAYER 1 WINS!', True, white)
+            gameover_rect = gameover_text.get_rect(center=(700, 95))
+            win_sound.play()
             if stime2-self.stime>=1700:
-                lose_sound.stop()
+                win_sound.stop()
             self.active = 0
 
 
-        surface.fill(purple)
+        # surface.fill(violet)
         replay_text = gameover_font.render('Press Y to play again and N to end the game', True, white)
         replay_rect = replay_text.get_rect(center=(700, 600))
 
-        screen.blit(gameover, (300, 150))
+        screen.blit(gameover, (0, 0))
         screen.blit(gameover_text, gameover_rect)
         screen.blit(replay_text, replay_rect)
-
+        pygame.draw.rect(screen, white, pygame.Rect(450, 50, 500, 80), 3)
         pygame.display.update()
 
     def state_manager(self):
@@ -341,6 +341,7 @@ white = (255,255,255)
 blue = (135,206,250)
 yellow=(255,255,0)
 purple=(154,50,205)
+violet=(0,0,128)
 
 # background
 bg_surface = pygame.image.load('pong background1.jfif').convert_alpha()
@@ -360,7 +361,7 @@ intro2_size = (1000, 800)
 introduction2 = pygame.transform.scale(intro2_surface, intro2_size)
 
 over_surface=pygame.image.load('game over1.jpeg').convert_alpha()
-over_size = (800, 400)
+over_size = (1370, 700)
 gameover = pygame.transform.scale(over_surface, over_size)
 
 surface = pygame.display.set_mode((1370, 700))
@@ -371,17 +372,17 @@ instruction1_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=Tru
 instruction1_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
 instruction2_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
 instruction3_font=pygame.font.SysFont('freesansbold.ttf',40,bold=True,italic=True)
-gameover_font=pygame.font.SysFont('freesansbold.ttf',50,bold=True,italic=True)
+gameover_font=pygame.font.SysFont('freesansbold.ttf',60,bold=True,italic=True)
 
 welcome_sound = pygame.mixer.Sound("welcome.ogg")
 plob_sound = pygame.mixer.Sound("Shrink ray.ogg")
-pygame.mixer.Sound.set_volume(plob_sound, 0.3)
+pygame.mixer.Sound.set_volume(plob_sound, 0.35)
 
 score_sound = pygame.mixer.Sound("collide.wav")
 win_sound = pygame.mixer.Sound("win")
-pygame.mixer.Sound.set_volume(win_sound, 0.1)
-lose_sound = pygame.mixer.Sound("lose")
-pygame.mixer.Sound.set_volume(lose_sound, 0.1)
+pygame.mixer.Sound.set_volume(win_sound, 0.15)
+# lose_sound = pygame.mixer.Sound("lose")
+# pygame.mixer.Sound.set_volume(lose_sound, 0.1)
 
 # Game objects
 player = Player('paddle2.png', 1320, 350,(30, 120), 6)
